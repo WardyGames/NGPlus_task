@@ -1,6 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public interface IInteractable
+namespace Wardetta.Interactables
 {
-    void Interact();
+    public interface IInteractable
+    {
+        void Interact(GameObject other);
+    }
 }

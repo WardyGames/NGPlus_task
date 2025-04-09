@@ -1,11 +1,12 @@
+using Wardetta.Interactables;
 using UnityEngine;
 
 public class InteractableItem : MonoBehaviour, IInteractable
 {
-
-
-    public void Interact()
+    public void Interact(GameObject other)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Interact");
     }
+    
+
 }
