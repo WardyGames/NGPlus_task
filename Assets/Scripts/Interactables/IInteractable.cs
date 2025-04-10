@@ -4,6 +4,6 @@ namespace Wardetta.Interactables
 {
     public interface IInteractable
     {
-        void Interact(GameObject other);
+        bool Interact(GameObject other);
     }
 }

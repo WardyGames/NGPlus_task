@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -8,7 +11,7 @@ namespace Wardetta.Items.Inventories
     {
         [SerializeField] private int money = 100;
         [SerializeField] private UnityEvent onInventoryItemsUpdated = null;
-        [SerializeField] private ItemSlot[] itemSlots = new ItemSlot[0];
+        [SerializeField] private ItemSlot[] itemSlots = Array.Empty<ItemSlot>();
 
         public int Money { get { return money; } set { money = value; } }
 
@@ -16,6 +19,7 @@ namespace Wardetta.Items.Inventories
 
         public ItemSlot AddItem(ItemSlot itemSlot)
         {
+            Debug.Log(itemSlot.item.Name);
             for (int i = 0; i < itemSlots.Length; i++)
             {
                 if (itemSlots[i].item != null)
@@ -103,7 +107,39 @@ namespace Wardetta.Items.Inventories
                 }
             }
         }
+        public void RemoveItem(ItemSlot itemSlot, int quantity)
+        {
+            for (int i = 0; i < itemSlots.Length; i++)
+            {
+                if (itemSlots[i].item != null)
+                {
+                    if (itemSlots[i].item == itemSlot.item)
+                    {
+                        if (itemSlots[i].quantity < quantity)
+                        {
+                            itemSlot.quantity -= quantity;
 
+                            itemSlots[i] = new ItemSlot();
+                        }
+                        else
+                        {
+                            itemSlots[i].quantity -= quantity;
+
+                            onInventoryItemsUpdated.Invoke();
+                            
+                            if (itemSlots[i].quantity == 0)
+                            {
+                                itemSlots[i] = new ItemSlot();
+
+                                onInventoryItemsUpdated.Invoke();
+
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         public List<InventoryItem> GetAllUniqueItems()
         {
             List<InventoryItem> items = new List<InventoryItem>();
@@ -119,7 +155,21 @@ namespace Wardetta.Items.Inventories
 
             return items;
         }
+        public List<ItemSlot> GetAllItems()
+        {
+            // List<ItemSlot> items = new List<ItemSlot>();
+            //
+            // for (int i = 0; i < itemSlots.Length; i++)
+            // {
+            //     if (itemSlots[i].item == null) { continue; }
+            //
+            //     if (items.Contains(itemSlots[i].item)) { continue; }
+            //
+            //     items.Add(itemSlots[i].item);
+            // }
 
+            return itemSlots.ToList();
+        }
         public void RemoveAt(int slotIndex)
         {
             if (slotIndex < 0 || slotIndex > itemSlots.Length - 1) { return; }
@@ -188,5 +238,91 @@ namespace Wardetta.Items.Inventories
 
             return totalCount;
         }
+        
+        [SerializeField] private ItemDatabase itemDatabase;
+
+        private string SavePath => Path.Combine(Application.persistentDataPath, "inventory.json");
+
+        public void SaveInventory()
+        {
+            // var data = new InventorySaveData
+            // {
+            //     money = money,
+            //     itemSlots = itemSlots
+            //         .Where(slot => slot.item != null)
+            //         .Select(slot => new ItemSlotSave { itemID = slot.item.Name, quantity = slot.quantity })
+            //         .ToList()
+            // };
+            //
+            // string json = JsonUtility.ToJson(data, true);
+            // File.WriteAllText(SavePath, json);
+            // Debug.Log("Saved inventory to " + SavePath);
+            
+            var data = new InventorySaveData
+            {
+                money = money,
+                itemSlots = new List<ItemSlotSave>()
+            };
+
+            for (int i = 0; i < itemSlots.Length; i++)
+            {
+                var slot = itemSlots[i];
+                if (slot.item == null) continue;
+
+                data.itemSlots.Add(new ItemSlotSave
+                {
+                    slot = i, // Save the current slot index
+                    itemID = slot.item.Name,
+                    quantity = slot.quantity
+                });
+            }
+
+            string json = JsonUtility.ToJson(data, true);
+            File.WriteAllText(SavePath, json);
+        }
+
+        public void LoadInventory()
+        {
+            if (!File.Exists(SavePath)) return;
+
+            string json = File.ReadAllText(SavePath);
+            InventorySaveData data = JsonUtility.FromJson<InventorySaveData>(json);
+
+            money = data.money;
+            itemSlots = new ItemSlot[itemSlots.Length]; // Clear current slots
+
+            foreach (var savedSlot in data.itemSlots)
+            {
+                var item = itemDatabase.GetItemByID(savedSlot.itemID);
+                if (item != null && savedSlot.slot >= 0 && savedSlot.slot < itemSlots.Length)
+                {
+                    itemSlots[savedSlot.slot] = new ItemSlot(item, savedSlot.quantity);
+                }
+            }
+
+            onInventoryItemsUpdated?.Invoke();
+            // if (!File.Exists(SavePath))
+            // {
+            //     Debug.LogWarning("No save file found.");
+            //     return;
+            // }
+            //
+            // string json = File.ReadAllText(SavePath);
+            // InventorySaveData data = JsonUtility.FromJson<InventorySaveData>(json);
+            //
+            // money = data.money;
+            // itemSlots = new ItemSlot[itemSlots.Length]; // Or data.itemSlots.Count if you want dynamic length
+            //
+            // for (int i = 0; i < data.itemSlots.Count && i < itemSlots.Length; i++)
+            // {
+            //     var item = itemDatabase.GetItemByID(data.itemSlots[i].itemID);
+            //     if (item != null)
+            //         itemSlots[i] = new ItemSlot(item, data.itemSlots[i].quantity);
+            // }
+            //
+            // onInventoryItemsUpdated?.Invoke();
+        }
     }
+    
+    
 }

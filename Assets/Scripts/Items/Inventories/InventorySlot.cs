@@ -1,5 +1,4 @@
-﻿using Wardetta.Items.Hotbars;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

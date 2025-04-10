@@ -67,7 +67,7 @@ namespace Wardetta.Npcs.Occupations.Vendors
 
             itemNameText.text = item.Name;
             itemDescriptionText.text = item.Description;
-            itemDataText.text = item.GetInfoDisplayText();
+            //itemDataText.text = item.GetInfoDisplayText();
 
             int totalQuantity = scenarioData.SellingItemContainer.GetTotalQuantity(item);
             quantityText.text = $"0/{totalQuantity}";

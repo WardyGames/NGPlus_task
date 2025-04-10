@@ -1,5 +1,4 @@
 ﻿using Wardetta.Items;
-using Wardetta.Items.Hotbars;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -52,7 +51,7 @@ namespace Hel.Items
         {
             StringBuilder builder = new StringBuilder();
 
-            builder.Append("<size=35>").Append(infoItem.ColouredName).Append("</size>\n");
+            builder.Append("<size=35>").Append(infoItem.Name).Append("</size>\n");
             builder.Append(infoItem.GetInfoDisplayText());
 
             infoText.text = builder.ToString();

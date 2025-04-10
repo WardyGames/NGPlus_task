@@ -11,7 +11,6 @@ namespace Wardetta.Items
 
         public string Name => name;
         public string Description => description;
-        public abstract string ColouredName { get; }
         public Sprite Icon => icon;
 
         public abstract string GetInfoDisplayText();

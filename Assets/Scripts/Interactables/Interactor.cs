@@ -17,7 +17,8 @@ namespace Wardetta.Interactables
 
             if (Input.GetKeyDown(KeyCode.E))
             {
-                currentInteractable.Interact(transform.root.gameObject);
+                if(currentInteractable.Interact(transform.root.gameObject))
+                    HandleManualExit();
             }
         }
 
@@ -38,6 +39,11 @@ namespace Wardetta.Interactables
 
             if (interactable != currentInteractable) { return; }
 
+            currentInteractable = null;
+        }
+        
+        void HandleManualExit()
+        {
             currentInteractable = null;
         }
     }

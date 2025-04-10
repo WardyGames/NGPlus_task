@@ -14,8 +14,7 @@ namespace Wardetta.Items
         public override string GetInfoDisplayText()
         {
             StringBuilder builder = new StringBuilder();
-
-            builder.Append(Rarity.Name).AppendLine();
+            
             builder.Append("Max Stack: ").Append(MaxStack).AppendLine();
             builder.Append("Sell Price: ").Append(SellPrice).Append(" Gold");
 

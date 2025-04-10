@@ -19,6 +19,13 @@ namespace Wardetta.Items.Inventories
                     itemDestroyer.Activate(thisSlot.ItemSlot, thisSlot.SlotIndex);
                 }
             }
+            
+            else if (eventData.button == PointerEventData.InputButton.Right)
+            {
+                InventorySlot thisSlot = ItemSlotUI as InventorySlot;
+                itemDestroyer.UseItem(thisSlot.ItemSlot);
+            }
+            
         }
     }
 }

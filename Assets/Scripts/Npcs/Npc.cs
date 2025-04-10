@@ -18,11 +18,12 @@ namespace Wardetta.Npcs
 
         private void Start() => Occupations = GetComponents<IOccupation>();
 
-        public void Interact(GameObject other)
+        public bool Interact(GameObject other)
         {
             OtherInteractor = other;
 
             onStartInteraction.Raise(this);
+            return false;
         }
     }
 }

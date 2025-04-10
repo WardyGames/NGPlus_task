@@ -17,7 +17,7 @@ namespace Wardetta.Items
         {
             this.slotIndex = slotIndex;
 
-            areYouSureText.text = $"Are you sure you wish to destroy {itemSlot.quantity}x {itemSlot.item.ColouredName}?";
+            areYouSureText.text = $"Are you sure you wish to destroy {itemSlot.quantity}x {itemSlot.item.Name}?";
 
             gameObject.SetActive(true);
         }
@@ -27,6 +27,16 @@ namespace Wardetta.Items
             inventory.RemoveAt(slotIndex);
 
             gameObject.SetActive(false);
+        }
+
+        public void DestroyItemImmediately(ItemSlot itemSlot, int selectedSlotIndex)
+        {
+            inventory.RemoveAt(selectedSlotIndex);
+        }
+        
+        public void UseItem(ItemSlot itemSlot)
+        {
+            inventory.RemoveItem(itemSlot, 1);
         }
     }
 }

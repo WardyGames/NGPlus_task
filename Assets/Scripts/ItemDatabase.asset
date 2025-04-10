@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d275505cc55ab24bad335abb327e635, type: 3}
-  m_Name: Rarity_Uncommon
+  m_Script: {fileID: 11500000, guid: c7aeda1380ce1024d83762f1582cbffa, type: 3}
+  m_Name: ItemDatabase
   m_EditorClassIdentifier: 
-  name: Uncommon
-  colour: {r: 0.18614274, g: 0.8396226, b: 0.3236247, a: 1}
+  allItems:
+  - {fileID: 11400000, guid: 6eee8f0022acc5e4bb37024501bb3ab0, type: 2}
